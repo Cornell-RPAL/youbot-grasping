@@ -1,0 +1,18 @@
+<!-- Launch this in the namespace for the youBot being used, e.g. "mufasa" -->
+<launch>
+  <node name="grasp_service" pkg="youbot_grasping" type="grasp_service.py">
+    <param name="global_frame" value="world"/> 
+    <!-- Change this for the particular youBot being used -->
+    <param name="youbot_frame" value="vicon/Mufasa_Base/Mufasa_Base"/>
+  </node>
+  <node pkg="vicon_bridge" type="vicon_bridge" name="vicon" output="screen">
+    <param name="stream_mode" value="ClientPull" type="str" />
+    <param name="datastream_hostport" value="192.168.1.2:801" type="str" />
+    <!--param name="datastream_hostport" value="vicon:801" type="str" /-->
+    <param name="tf_ref_frame_id" value="/world" type="str" />
+  </node>
+  <!-- Temporary args for now; this is the VICON -> tf2 package -->
+  <node pkg="tf" type="static_transform_publisher" name="pose_broadcaster"
+        args="0 0 -1.698 0 0 0.612 0.791 /vicon/Mufasa_Base/Mufasa_Base /odom 10" />
+  <include file="$(find youbot_moveit)/launch/move_group.launch"/>
+</launch>
